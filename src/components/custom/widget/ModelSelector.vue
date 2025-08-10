@@ -12,12 +12,22 @@
     </template>
 
     <template #header>
-      <!-- here -->
       <SearchBox v-model:="searchQuery" class="max-w-[384px]" />
     </template>
 
     <template #content>
-      <!-- here -->
+      <div class="px-6 pt-2 pb-4 flex gap-2">
+        <MultiSelect
+          v-model="selectedFrameworks"
+          label="Select Frameworks"
+          :options="frameworkOptions"
+        />
+        <MultiSelect
+          v-model="selectedProjects"
+          label="Select Projects"
+          :options="projectOptions"
+        />
+      </div>
     </template>
 
     <template #rightPanel>
@@ -27,25 +37,30 @@
 </template>
 
 <script setup lang="ts">
-import { provide, ref, watch } from 'vue'
+import { provide, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { NavGroupData, NavItemData } from '@/types/custom_components/navTypes'
 import { OnCloseKey } from '@/types/custom_components/widgetTypes'
 
+import MultiSelect from '../input/MultiSelect.vue'
 import SearchBox from '../input/SearchBox.vue'
 import BaseWidgetLayout from './layout/BaseWidgetLayout.vue'
 import LeftSidePanel from './panel/LeftSidePanel.vue'
 import RightSidePanel from './panel/RightSidePanel.vue'
 
-const { t } = useI18n()
+const frameworkOptions = ref([
+  { name: 'Vue', value: 'vue' },
+  { name: 'React', value: 'react' },
+  { name: 'Angular', value: 'angular' },
+  { name: 'Svelte', value: 'svelte' }
+])
 
-const { onClose } = defineProps<{
-  onClose: () => void
-}>()
-const searchQuery = ref<string>('')
-
-provide(OnCloseKey, onClose)
+const projectOptions = ref([
+  { name: 'Project A', value: 'proj-a' },
+  { name: 'Project B', value: 'proj-b' },
+  { name: 'Project C', value: 'proj-c' }
+])
 
 const temp_navigation = ref<(NavItemData | NavGroupData)[]>([
   { id: 'installed', label: 'Installed' },
@@ -66,9 +81,17 @@ const temp_navigation = ref<(NavItemData | NavGroupData)[]>([
   }
 ])
 
-const selectedNavItem = ref<string | null>('installed')
+const { t } = useI18n()
 
-watch(selectedNavItem, (newValue) => {
-  console.log('Selected navigation item changed:', newValue)
-})
+const { onClose } = defineProps<{
+  onClose: () => void
+}>()
+
+provide(OnCloseKey, onClose)
+
+const searchQuery = ref<string>('')
+const selectedFrameworks = ref([])
+const selectedProjects = ref([])
+
+const selectedNavItem = ref<string | null>('installed')
 </script>
