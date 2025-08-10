@@ -16,17 +16,26 @@
     </template>
 
     <template #content>
-      <div class="px-6 pt-2 pb-4 flex gap-2">
-        <MultiSelect
-          v-model="selectedFrameworks"
-          label="Select Frameworks"
-          :options="frameworkOptions"
-        />
-        <MultiSelect
-          v-model="selectedProjects"
-          label="Select Projects"
-          :options="projectOptions"
-        />
+      <div class="flex justify-between items-center px-6 pt-2 pb-4">
+        <div class="flex gap-2">
+          <MultiSelect
+            v-model="selectedFrameworks"
+            label="Select Frameworks"
+            :options="frameworkOptions"
+          />
+          <MultiSelect
+            v-model="selectedProjects"
+            label="Select Projects"
+            :options="projectOptions"
+          />
+        </div>
+        <div>
+          <SingleSelect v-model="selectedFilter" :options="filterOptions">
+            <template #label-icon>
+              <i-lucide:arrow-up-down class="text-neutral-400" />
+            </template>
+          </SingleSelect>
+        </div>
       </div>
     </template>
 
@@ -45,6 +54,7 @@ import { OnCloseKey } from '@/types/custom_components/widgetTypes'
 
 import MultiSelect from '../input/MultiSelect.vue'
 import SearchBox from '../input/SearchBox.vue'
+import SingleSelect from '../input/SingleSelect.vue'
 import BaseWidgetLayout from './layout/BaseWidgetLayout.vue'
 import LeftSidePanel from './panel/LeftSidePanel.vue'
 import RightSidePanel from './panel/RightSidePanel.vue'
@@ -60,6 +70,12 @@ const projectOptions = ref([
   { name: 'Project A', value: 'proj-a' },
   { name: 'Project B', value: 'proj-b' },
   { name: 'Project C', value: 'proj-c' }
+])
+
+const filterOptions = ref([
+  { name: 'Popular', value: 'popular' },
+  { name: 'Newest', value: 'newest' },
+  { name: 'Oldest', value: 'oldest' }
 ])
 
 const temp_navigation = ref<(NavItemData | NavGroupData)[]>([
@@ -92,6 +108,7 @@ provide(OnCloseKey, onClose)
 const searchQuery = ref<string>('')
 const selectedFrameworks = ref([])
 const selectedProjects = ref([])
+const selectedFilter = ref(filterOptions.value[0])
 
 const selectedNavItem = ref<string | null>('installed')
 </script>
