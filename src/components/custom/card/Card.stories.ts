@@ -171,7 +171,7 @@ const createCardTemplate = (args: CardStoryArgs) => ({
     }
   },
   template: `
-    <div class="p-4">
+    <div class="p-4 min-h-screen bg-zinc-50 dark-theme:bg-zinc-900">
       <CardContainer 
         :ratio="args.containerRatio" 
         :max-width="args.maxWidth"
@@ -476,8 +476,8 @@ export const GridOfCards: Story = {
       return { cards }
     },
     template: `
-      <div class="p-4">
-        <h3 class="text-lg font-semibold mb-4">Model Gallery</h3>
+      <div class="p-4 min-h-screen bg-zinc-50 dark-theme:bg-zinc-900">
+        <h3 class="text-lg font-semibold mb-4 text-neutral-900 dark-theme:text-neutral-100">Model Gallery</h3>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
           <CardContainer 
             v-for="card in cards" 
@@ -567,9 +567,9 @@ export const ResponsiveGrid: Story = {
       }
     },
     template: `
-      <div class="p-4 space-y-8">
+      <div class="p-4 space-y-8 min-h-screen bg-zinc-50 dark-theme:bg-zinc-900">
         <div>
-          <h3 class="text-lg font-semibold mb-4">Square Cards (1:1)</h3>
+          <h3 class="text-lg font-semibold mb-4 text-neutral-900 dark-theme:text-neutral-100">Square Cards (1:1)</h3>
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <CardContainer 
               v-for="card in squareCards" 
@@ -597,7 +597,7 @@ export const ResponsiveGrid: Story = {
         </div>
 
         <div>
-          <h3 class="text-lg font-semibold mb-4">Portrait Cards (2:3)</h3>
+          <h3 class="text-lg font-semibold mb-4 text-neutral-900 dark-theme:text-neutral-100">Portrait Cards (2:3)</h3>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             <CardContainer 
               v-for="card in portraitCards" 
@@ -624,7 +624,7 @@ export const ResponsiveGrid: Story = {
         </div>
 
         <div>
-          <h3 class="text-lg font-semibold mb-4">Tall Portrait Cards (2:4)</h3>
+          <h3 class="text-lg font-semibold mb-4 text-neutral-900 dark-theme:text-neutral-100">Tall Portrait Cards (2:4)</h3>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             <CardContainer 
               v-for="card in tallCards" 
