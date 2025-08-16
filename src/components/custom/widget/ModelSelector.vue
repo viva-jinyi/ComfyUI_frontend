@@ -1,7 +1,7 @@
 <template>
-  <BaseWidgetLayout>
+  <BaseWidgetLayout :content-title="$t('Checkpoints')">
     <template #leftPanel>
-      <LeftSidePanel v-model="selectedNavItem" :nav-items="temp_navigation">
+      <LeftSidePanel v-model="selectedNavItem" :nav-items="tempNavigation">
         <template #header-icon>
           <i-lucide:puzzle class="text-neutral" />
         </template>
@@ -17,34 +17,11 @@
 
     <template #header-right-area>
       <div class="flex gap-2">
-        <IconButton
-          size="sm"
-          class="!bg-orange-500 text-white"
-          @click="console.log('Hello World!!')"
-        >
-          <i-lucide:triangle-alert />
-        </IconButton>
-        <IconGroup>
-          <IconButton @click="console.log('Hello World!!')">
-            <i-lucide:heart />
-          </IconButton>
-          <IconButton @click="console.log('Hello World!!')">
-            <i-lucide:download />
-          </IconButton>
-          <IconButton @click="console.log('Hello World!!')">
-            <i-lucide:external-link />
-          </IconButton>
-        </IconGroup>
-        <TextButton
-          label="Action"
-          type="primary"
-          @click="console.log('Hello World!!')"
-        />
-        <TextButton
-          label="Action"
-          type="secondary"
-          @click="console.log('Hello World!!')"
-        />
+        <IconTextButton type="primary" label="Upload Model" @click="() => {}">
+          <template #icon>
+            <i-lucide:upload />
+          </template>
+        </IconTextButton>
         <MoreButton>
           <template #default="{ close }">
             <IconTextButton
@@ -52,7 +29,6 @@
               label="Settings"
               @click="
                 () => {
-                  console.log('Settings')
                   close()
                 }
               "
@@ -66,7 +42,6 @@
               label="Profile"
               @click="
                 () => {
-                  console.log('Profile')
                   close()
                 }
               "
@@ -80,43 +55,52 @@
       </div>
     </template>
 
-    <template #content>
-      <div class="flex justify-between items-center px-6 pt-2 pb-4">
-        <div class="flex gap-2">
-          <MultiSelect
-            v-model="selectedFrameworks"
-            label="Select Frameworks"
-            :options="frameworkOptions"
-          />
-          <MultiSelect
-            v-model="selectedProjects"
-            label="Select Projects"
-            :options="projectOptions"
-          />
-        </div>
-        <div>
-          <SingleSelect v-model="selectedFilter" :options="filterOptions">
-            <template #label-icon>
-              <i-lucide:arrow-up-down class="text-neutral-400" />
-            </template>
-          </SingleSelect>
-        </div>
+    <template #contentFilter>
+      <div class="relative px-6 pt-2 pb-4 flex gap-2">
+        <MultiSelect
+          v-model="selectedFrameworks"
+          label="Select Frameworks"
+          :options="frameworkOptions"
+        />
+        <MultiSelect
+          v-model="selectedProjects"
+          label="Select Projects"
+          :options="projectOptions"
+        />
+        <SingleSelect
+          v-model="selectedSort"
+          label="Sorting Type"
+          :options="sortOptions"
+          class="w-[135px]"
+        >
+          <template #icon>
+            <i-lucide:filter />
+          </template>
+        </SingleSelect>
       </div>
+    </template>
 
+    <template #content>
       <!-- Card Examples -->
-      <div
-        class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 px-6 py-4"
-      >
-        <CardContainer ratio="tallPortrait">
+      <!-- <div class="min-h-0 px-6 py-4 overflow-y-auto scrollbar-hide"> -->
+      <!-- <h2 class="text-xxl py-4 pt-0 m-0">{{ $t('Checkpoints') }}</h2> -->
+      <div class="flex flex-wrap gap-2">
+        <CardContainer
+          v-for="i in 100"
+          :key="i"
+          ratio="square"
+          :max-width="480"
+          :min-width="230"
+        >
           <template #top>
-            <CardTop ratio="square">
+            <CardTop ratio="landscape">
               <template #default>
                 <div class="w-full h-full bg-blue-500"></div>
               </template>
               <template #top-right>
                 <IconButton
                   class="!bg-white !text-neutral-900"
-                  @click="console.log('Hello World!!')"
+                  @click="() => {}"
                 >
                   <i-lucide:info />
                 </IconButton>
@@ -136,34 +120,8 @@
             <CardBottom></CardBottom>
           </template>
         </CardContainer>
-
-        <CardContainer ratio="portrait">
-          <template #top>
-            <CardTop ratio="square">
-              <div class="w-full h-full bg-red-500"></div>
-            </CardTop>
-          </template>
-          <template #bottom>
-            <CardBottom></CardBottom>
-          </template>
-        </CardContainer>
-
-        <CardContainer ratio="square">
-          <template #top>
-            <CardTop ratio="landscape">
-              <div class="w-full h-full bg-red-500"></div>
-            </CardTop>
-          </template>
-          <template #bottom>
-            <CardBottom class="p-2 flex flex-col gap-2">
-              <CardTitle>{{ t('manager.nodePack') }}</CardTitle>
-              <CardDescription>{{
-                t('manager.noNodesFoundDescription')
-              }}</CardDescription>
-            </CardBottom>
-          </template>
-        </CardContainer>
       </div>
+      <!-- </div> -->
     </template>
 
     <template #rightPanel>
@@ -183,10 +141,8 @@ import SquareTag from '../SquareTag.vue'
 import IconButton from '../button/IconButton.vue'
 import IconTextButton from '../button/IconTextButton.vue'
 import MoreButton from '../button/MoreButton.vue'
-import TextButton from '../button/TextButton.vue'
 import CardBottom from '../card/CardBottom.vue'
 import CardContainer from '../card/CardContainer.vue'
-import CardDescription from '../card/CardDescription.vue'
 import CardTop from '../card/CardTop.vue'
 import MultiSelect from '../input/MultiSelect.vue'
 import SearchBox from '../input/SearchBox.vue'
@@ -208,13 +164,13 @@ const projectOptions = ref([
   { name: 'Project C', value: 'proj-c' }
 ])
 
-const filterOptions = ref([
+const sortOptions = ref([
   { name: 'Popular', value: 'popular' },
-  { name: 'Newest', value: 'newest' },
-  { name: 'Oldest', value: 'oldest' }
+  { name: 'Latest', value: 'latest' },
+  { name: 'A → Z', value: 'az' }
 ])
 
-const temp_navigation = ref<(NavItemData | NavGroupData)[]>([
+const tempNavigation = ref<(NavItemData | NavGroupData)[]>([
   { id: 'installed', label: 'Installed' },
   {
     title: 'TAGS',
@@ -244,7 +200,7 @@ provide(OnCloseKey, onClose)
 const searchQuery = ref<string>('')
 const selectedFrameworks = ref([])
 const selectedProjects = ref([])
-const selectedFilter = ref(filterOptions.value[0])
+const selectedSort = ref<string>('popular')
 
 const selectedNavItem = ref<string | null>('installed')
 </script>

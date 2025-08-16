@@ -1,6 +1,6 @@
 <template>
   <div
-    class="base-widget-layout rounded-2xl overflow-hidden relative bg-neutral-50 dark-theme:bg-zinc-800"
+    class="base-widget-layout rounded-2xl overflow-hidden relative bg-zinc-50 dark-theme:bg-zinc-800"
   >
     <IconButton
       v-show="!isRightPanelOpen && hasRightPanel"
@@ -49,7 +49,7 @@
             <div
               class="flex justify-end gap-2 w-0"
               :class="
-                isRightPanelOpen && hasRightPanel ? 'min-w-8' : 'min-w-18'
+                hasRightPanel && !isRightPanelOpen ? 'min-w-18' : 'min-w-8'
               "
             >
               <IconButton
@@ -61,8 +61,15 @@
             </div>
           </header>
 
-          <main class="flex-1">
-            <slot name="content"></slot>
+          <main class="flex flex-col flex-1 min-h-0">
+            <!-- Fallback title bar when no leftPanel is provided -->
+            <slot name="contentFilter"></slot>
+            <h2 v-if="!$slots.leftPanel" class="text-xxl px-6 pt-2 pb-6 m-0">
+              {{ contentTitle }}
+            </h2>
+            <div class="min-h-0 px-6 pt-0 pb-10 overflow-y-auto scrollbar-hide">
+              <slot name="content"></slot>
+            </div>
           </main>
         </div>
         <aside
@@ -82,6 +89,10 @@ import { computed, inject, ref, useSlots, watch } from 'vue'
 
 import IconButton from '@/components/custom/button/IconButton.vue'
 import { OnCloseKey } from '@/types/custom_components/widgetTypes'
+
+const { contentTitle } = defineProps<{
+  contentTitle: string
+}>()
 
 const BREAKPOINTS = { md: 880 }
 const PANEL_SIZES = {
